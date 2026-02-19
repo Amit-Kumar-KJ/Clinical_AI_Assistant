@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+import os
+from fastapi import FastAPI, HTTPException, Header
 from .schemas import TranscriptIn, SoapOut
 from .prompts import SYSTEM_INSTRUCTION, SOAP_FORMAT
 from .guardrails import validate_transcript, basic_flags
@@ -11,12 +12,19 @@ DISCLAIMER = (
     "A licensed clinician must review and edit the generated note before use."
 )
 
-@app.get("/")
-def read_root():
-    return {"message": "Backend is working"}
+APP_API_KEY = os.getenv("APP_API_KEY")
+
+def require_key(x_api_key: str | None):
+    if APP_API_KEY and x_api_key != APP_API_KEY:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 @app.post("/generate", response_model=SoapOut)
-def generate(data: TranscriptIn):
+def generate(data: TranscriptIn,  x_api_key: str | None = Header(default=None)):
+    require_key(x_api_key)
     try:
         transcript = validate_transcript(data.text)
         flags = basic_flags(transcript)
