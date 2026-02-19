@@ -56,6 +56,7 @@ Clinical_AI_Assistant/
 │
 ├── .gitignore
 └── README.md
+---
 
 ## 🔐 Authentication
 
