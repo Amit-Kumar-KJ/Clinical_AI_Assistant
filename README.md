@@ -65,10 +65,10 @@ All requests to protected endpoints (e.g., `/generate`) must include a valid API
 
 ### Required Header
 
--X-API-KEY: <your_api_key>
+`X-API-KEY: <your_api_key>`
 
-If the API key is missing or incorrect, the server will return:
-**401 Unauthorized**
+If the API key is missing or incorrect, the server will return **401 Unauthorized**.
+
 ---
 
 ## 📡 API Reference
@@ -76,68 +76,92 @@ If the API key is missing or incorrect, the server will return:
 ### POST `/generate`
 
 #### Headers
+```json
 {
   "Content-Type": "application/json",
   "X-API-KEY": "your_api_key"
 }
+```
 
 #### Body
+```json
 {
   "text": "Doctor: What brings you in today? Patient: I have fever and cough..."
 }
+```
 
 #### Example cURL
+```bash
 curl -X POST https://clinical-ai-assistant-61ui.onrender.com/generate \
   -H "Content-Type: application/json" \
   -H "X-API-KEY: your_api_key" \
   -d '{"text":"Doctor: What brings you in today? Patient: I have fever and cough."}'
+```
 
 ---
 
 ## 🧪 Local Setup
 
 ### 1) Clone the repository
-git clone https://github.com/Amit-Kumar-KJ/Clinical_AI_Assistant.git  
+```bash
+git clone https://github.com/Amit-Kumar-KJ/Clinical_AI_Assistant.git
 cd Clinical_AI_Assistant
+```
 
 ### 2) Create & activate a virtual environment
 
-Recommended: create the venv inside backend/ since backend dependencies live there.
+Recommended: create the venv inside `backend/` since backend dependencies live there.
 
-cd backend  
-python -m venv venv  
+```bash
+cd backend
+python -m venv venv
+```
 
-Windows (PowerShell)  
-venv\Scripts\Activate.ps1  
+Windows (PowerShell)
+```bash
+venv\Scripts\Activate.ps1
+```
 
-Windows (CMD)  
-venv\Scripts\activate.bat  
+Windows (CMD)
+```bash
+venv\Scripts\activate.bat
+```
 
-macOS/Linux  
-source venv/bin/activate  
+macOS/Linux
+```bash
+source venv/bin/activate
+```
 
 ### 3) Install dependencies
-pip install -r requirements.txt  
+```bash
+pip install -r requirements.txt
+```
 
-### 4) Create a .env file (IMPORTANT)
+### 4) Create a `.env` file (IMPORTANT)
 
-Create backend/.env:
+Create `backend/.env`:
 
-APP_API_KEY=your_secret_key_for_this_app  
-OPENAI_API_KEY=your_openai_key  
+```env
+APP_API_KEY=your_secret_key_for_this_app
+OPENAI_API_KEY=your_openai_key
+```
 
-Keep .env local only.  
-Never commit .env to GitHub.  
+Keep `.env` local only.  
+Never commit `.env` to GitHub.
 
 ### 5) Run the backend
 
 Replace the run command if your project uses uvicorn/FastAPI, etc.
 
-If Flask-style  
-python app.py  
+If Flask-style
+```bash
+python app.py
+```
 
-If FastAPI + uvicorn  
-uvicorn app:app --reload  
+If FastAPI + uvicorn
+```bash
+uvicorn app:app --reload
+```
 
 ---
 
@@ -145,16 +169,20 @@ uvicorn app:app --reload
 
 This project includes a benchmarking script:
 
-metrics/benchmark_latency.py  
+`metrics/benchmark_latency.py`
 
 ### Run benchmark
 
-From repo root:  
-python metrics/benchmark_latency.py  
+From repo root:
+```bash
+python metrics/benchmark_latency.py
+```
 
-Or:  
-cd metrics  
-python benchmark_latency.py  
+Or:
+```bash
+cd metrics
+python benchmark_latency.py
+```
 
 ### What it measures
 
@@ -178,8 +206,8 @@ Deployed an AI-powered clinical transcript processing backend on Render, achievi
 ## 🛡️ Security Notes
 
 - API keys stored in environment variables  
-- .env is ignored via .gitignore  
-- Requests require X-API-KEY header  
+- `.env` is ignored via `.gitignore`  
+- Requests require `X-API-KEY` header  
 - No secrets are hardcoded into source code  
 
 ---
