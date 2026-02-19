@@ -195,13 +195,6 @@ Tip: Run at least 20–50 requests for a stable average, especially on Render fr
 
 ---
 
-## 🧾 Resume-Ready Metrics Line
-
-You can add a bullet like this (replace X with your benchmark result):
-
-Deployed an AI-powered clinical transcript processing backend on Render, achieving ~X seconds average response latency per transcript request, secured via API-key authentication and environment-based secret management.
-
----
 
 ## 🛡️ Security Notes
 
