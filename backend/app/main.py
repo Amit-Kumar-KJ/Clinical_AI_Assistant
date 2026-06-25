@@ -1,6 +1,7 @@
 import os
+import json
 from fastapi import FastAPI, HTTPException, Header
-from .schemas import TranscriptIn, SoapOut
+from .schemas import TranscriptIn, SoapOut, SoapNote
 from .prompts import SYSTEM_INSTRUCTION, SOAP_FORMAT
 from .guardrails import validate_transcript, basic_flags
 from .gemini_client import generate_text
@@ -23,7 +24,7 @@ def health():
     return {"status": "ok"}
 
 @app.post("/generate", response_model=SoapOut)
-def generate(data: TranscriptIn,  x_api_key: str | None = Header(default=None)):
+def generate(data: TranscriptIn, x_api_key: str | None = Header(default=None)):
     require_key(x_api_key)
     try:
         transcript = validate_transcript(data.text)
@@ -35,11 +36,17 @@ def generate(data: TranscriptIn,  x_api_key: str | None = Header(default=None)):
             f"Transcript:\n{transcript}\n"
         )
 
-        soap = generate_text(prompt)
-        if not soap:
+        raw = generate_text(prompt)
+        if not raw:
             raise RuntimeError("Model returned empty output.")
 
-        return SoapOut(soap=soap, disclaimer=DISCLAIMER, flags=flags)
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError:
+            raise RuntimeError(f"Model returned invalid JSON: {raw[:200]}")
+
+        soap_note = SoapNote(**parsed)
+        return SoapOut(soap=soap_note, disclaimer=DISCLAIMER, flags=flags)
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
